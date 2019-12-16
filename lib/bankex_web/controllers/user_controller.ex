@@ -1,21 +1,34 @@
 defmodule BankexWeb.UserController do
     use BankexWeb, :controller
 
+    alias Bankex.Accounts
+    alias Bankex.Accounts.User
     alias BankexWeb.Auth.Guardian
 
-    def create(conn, %{"username" => username}) do
-        text conn, "Signup user #{username}"
+    action_fallback BankexWeb.FallbackController
+
+    def create(conn, %{"user" => user_params}) do
+        with {:ok, %User{} = user} <- Accounts.create_user(user_params),
+          {:ok, token, _claims} <- Guardian.encode_and_sign(user) do
+              conn
+              |> put_status(:created)
+              |> render("user.json", %{user: user, token: token})
+        end
     end
 
-    def signin(conn, %{"username" => username, "password" => password}) do
-        text conn, "User signing in..."
+    def signin(conn, %{"email" => email, "password" => password}) do
+        with {:ok, user, token} <- Guardian.authenticate(email, password) do
+          conn
+          |> put_status(:created)
+          |> render("user.json", %{user: user, token: token})
+        end
     end
 
-    def transfer(conn, %{"token" => token, "dest" => dest, "amount" => amount}) do
+    def transfer(conn, %{"dest" => dest, "amount" => amount}) do
         text conn, "Transfering from A to B..."
     end
 
-    def withdraw(conn, %{"token" => token, "amount" => amount}) do
+    def withdraw(conn, %{"amount" => amount}) do
         text conn, "Withdrawing #{amount} from someones account"
     end
 
@@ -27,4 +40,3 @@ defmodule BankexWeb.UserController do
         text conn, "Creating bank statement for everyone"
     end
 end
-
