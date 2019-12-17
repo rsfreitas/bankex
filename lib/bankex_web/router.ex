@@ -17,18 +17,10 @@ defmodule BankexWeb.Router do
 
   scope "/api", BankexWeb do
     pipe_through [:api, :auth]
+    post "/signout", UserController, :signout
     post "/transfer", UserController, :transfer
     post "/withdraw", UserController, :withdraw
     post "/statement", UserController, :statement
     post "/full-statement", UserController, :full_statement
-  end
-
-  pipeline :browser do
-    plug(:accepts, ["html"])
-  end
-
-  scope "/", BankexWeb do
-    pipe_through :browser
-    get "/", DefaultController, :index
   end
 end

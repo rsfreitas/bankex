@@ -26,6 +26,12 @@ defmodule BankexWeb.FallbackController do
     |> render(BankexWeb.ErrorView, :"401")
   end
 
+  def call(conn, {:error, :insufficient_balance}) do
+    conn
+    |> put_view(BankexWeb.ErrorView)
+    |> send_resp(400, "{\"errors\": {\"detail\": \"insufficient balance\"}}")
+  end
+
   def call(conn, {:error, _}) do
     conn
     |> put_status(:not_allowed)

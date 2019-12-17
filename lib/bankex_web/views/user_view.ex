@@ -7,4 +7,10 @@ defmodule BankexWeb.UserView do
       token: token
     }
   end
+
+  def render("logout.json", _) do
+    %{
+      message: "logged out"
+    }
+  end
 end
