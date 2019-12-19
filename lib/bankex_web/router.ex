@@ -18,9 +18,9 @@ defmodule BankexWeb.Router do
   scope "/api", BankexWeb do
     pipe_through [:api, :auth]
     post "/signout", UserController, :signout
-    post "/transfer", UserController, :transfer
-    post "/withdraw", UserController, :withdraw
-    post "/statement", UserController, :statement
-    post "/full-statement", UserController, :full_statement
+    post "/transfer", TransactionsController, :transfer
+    post "/withdraw", TransactionsController, :withdraw
+    get "/statement", TransactionsController, :statement
+    get "/full-statement", TransactionsController, :full_statement
   end
 end

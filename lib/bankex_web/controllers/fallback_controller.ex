@@ -37,4 +37,9 @@ defmodule BankexWeb.FallbackController do
     |> put_status(:not_allowed)
     |> render(BankexWeb.ErrorView, :"400")
   end
+
+  def call(conn, {:ok, _}) do
+    conn
+    |> send_resp(200, "{\"status\": \"ok\"}")
+  end
 end
